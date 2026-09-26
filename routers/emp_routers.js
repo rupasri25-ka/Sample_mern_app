@@ -31,12 +31,21 @@ router.get("/viewtasks", (req, res) => {
     res.send("view tasks page called");
 });
 
+
+
+
 router.get("/viewtodo", (req, res) => {
     res.send("view todo page called");
 });
 
-router.put("/updatprofile", (req, res) => {
-    res.send("update profile page called");
-});
+router.patch("/updateprofile/:id",async (req, res) => {
+    let data=req.body;
+    if(data.password){
+        data.password=await bcrypt.hash(data.password,10);
+    }
+    let updatedata=await users.findByIdAndUpdate(req.params.id,{$set:data});
+    res.send(updatedata);
+    
+})
 
-module.exports = router;
+module.exports = router
